@@ -191,19 +191,22 @@ def main(args):
     preproc, encoder, norm_constants = build_preproc_and_encoder(cfg, checkpoint, device)
 
     nominal_features, nominal_labels = load_data(args.data, map_location="cpu")
-    nominal_latents, nominal_labels, nominal_zero_frac = embed_dataset(
+    nominal_latents, nominal_labels_embedded, nominal_zero_frac = embed_dataset(
         preproc, encoder, nominal_features, nominal_labels, cfg_data, norm_constants, device
     )
 
-    # Remove grace period, during which model was still learning detector conditions
-    nominal_latents, nominal_labels, nominal_zero_frac = drop_grace_period(
-        nominal_latents, nominal_labels, nominal_zero_frac, args.grace_period
+    # Remove grace period, during which model was still learning detector conditions.
+    # Note: nominal_features/nominal_labels (pre-embedding) are deliberately left
+    # untouched -- they're reused at full length for each severity below, and
+    # each degraded pass has its own grace period dropped from its own output.
+    nominal_latents, nominal_labels_embedded, nominal_zero_frac = drop_grace_period(
+        nominal_latents, nominal_labels_embedded, nominal_zero_frac, args.grace_period
     )
 
-    plot_tsne_by_class(nominal_latents, nominal_labels, label_name_map, args.outdir)
+    plot_tsne_by_class(nominal_latents, nominal_labels_embedded, label_name_map, args.outdir)
 
     X_train, X_test, y_train, y_test = train_test_split(
-        nominal_latents, nominal_labels, stratify=nominal_labels, test_size=0.2, random_state=42
+        nominal_latents, nominal_labels_embedded, stratify=nominal_labels_embedded, test_size=0.2, random_state=42
     )
     probe = train_linear_probe(X_train, y_train, num_classes, device)
 
