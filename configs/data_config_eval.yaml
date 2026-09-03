@@ -1,0 +1,25 @@
+ds_name: robust_tagging_eval
+
+data_processing:
+  source: collide1m
+  sample_dir: /hackathon-data/C9_robust_tagging/eval
+  out_path: /hackathon-data/C9_robust_tagging/pt_files
+  pfcands: true
+  n_objects: 400
+  sort_by_pt: true
+  sk_spacing: null
+  nevents_per_class: -1   # keep every available event per class (~104k bkg, ~21k sig)
+
+  # Binary labels: background = 0, signal = 1.
+  # Combined eval set — both HH->4b and Four Top signals.
+  samples:
+    - background:
+      - QCD_HT50toInf
+      - DYJetsToLL_13TeV-madgraphMLM-pythia8
+      - tt0123j_5f_ckm_LO_MLM_leptonic
+      - tt0123j_5f_ckm_LO_MLM_hadronic
+      - tt0123j_5f_ckm_LO_MLM_semiLeptonic
+      - WJetsToLNu_13TeV-madgraphMLM-pythia8
+    - signal:
+      - HH_4b
+      - tttt_incl

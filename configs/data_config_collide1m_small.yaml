@@ -1,0 +1,23 @@
+ds_name: robust_tagging_train_data_small
+
+data_processing:
+  source: collide1m
+  sample_dir: /hackathon-data/C9_robust_tagging/train
+  out_path: /hackathon-data/C9_robust_tagging/train
+  pfcands: true
+  n_objects: 200
+  sort_by_pt: true
+  sk_spacing: null
+  nevents_per_class: 20000   # smaller baseline run, less data + fewer PF cands/event
+
+  samples:
+    - QCD:
+      - QCD_HT50toInf
+    - DY:
+      - DYJetsToLL_13TeV-madgraphMLM-pythia8
+    - TT:
+      - tt0123j_5f_ckm_LO_MLM_leptonic
+      - tt0123j_5f_ckm_LO_MLM_hadronic
+      - tt0123j_5f_ckm_LO_MLM_semiLeptonic
+    - WJets:
+      - WJetsToLNu_13TeV-madgraphMLM-pythia8

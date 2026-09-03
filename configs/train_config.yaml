@@ -1,0 +1,32 @@
+model_name: robust_tagging
+
+# Consumed by train.py via cfg.get_trdata_cfg(...)
+data:
+  preproc_type: PFPreProcessor   # PF-candidate inputs -> 14 features after preproc
+  val_split: 0.1
+  pairwise: false
+
+# Consumed by train.py via cfg.hp(...) / cfg.get_hyperparam(...)
+hyperparameters:
+  num_epochs: 60
+  early_stopping_patience: 5
+  batch_size: 128  # 512 OOM'd the GPU (7.92GiB) - full [B,H,N,N] attention matrices scale linearly with this
+  mixed_prec: true
+
+  lr: 1.0e-3
+  lr_min: 0.0
+  lr_warmup: 0.05
+
+  # transformer encoder
+  embed_size: 128
+  num_heads: 8
+  num_layers: 4
+  latent_dim: 6
+  proj_dim: 12
+  linear_dim: null
+
+  # contrastive (InfoNCE) term
+  contrast_temp: 0.07
+  contrastive_weight: 0.05
+  contrastive_max: null
+  contrastive_warmup: 0.05
