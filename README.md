@@ -25,14 +25,12 @@ Special thanks to Roy Cruz Candelaria, Maciej Glowacki, and Mehrnoosh Moallemi f
 
 ### What you'll edit
 
-- **`src/embedding/degradation.py`** — `Degradation.forward()` is a stub. This simulates detector dropout: `train.py` calls it with `severity=None` (implement your own randomized augmentation). Keep the class signature — `eval.py` will call it with a fixed `severity` for each step of the AUC-vs-severity sweep once it's provided (see "Evaluation" below).
+- **`src/embedding/degradation.py`** — `Degradation.forward()` is a stub. This simulates detector dropout: `train.py` calls it with `severity=None` (implement your own randomized augmentation), `eval.py` calls it with a fixed `severity` for each step of the AUC-vs-severity sweep. Keep the class signature so both call sites keep working.
 - **`src/embedding/models.py`** — the baseline architecture (`TransformerEncoder`, `Projector`, ...). Change layers, swap the encoder, add heads — anything, as long as it still produces a latent embedding.
 - **`configs/train_config.yaml`** — hyperparameters (lr, embed size, loss weights, etc.).
 
 ### Scoring
 
-At eval time the model sees both background and signal events and outputs a per-event anomaly score, scored via AUC vs. degradation severity. A robust model keeps a high AUC as more of the detector goes dark; your score is the area under that curve.
+At eval time the model sees both background and signal events and outputs a per-event anomaly score, scored via AUC vs. degradation severity. A robust model keeps a high AUC as more of the detector goes dark; your score is the area under that curve. `eval.py` overlays a red "(No degradation)" reference curve against your model's ("Your solution") on the same plot.
 
-### Evaluation
-
-`eval.py` is **not included in this repo yet** — it'll be provided shortly before judging, so nobody can tune against the exact scoring procedure ahead of time. At judging time it'll degrade the eval set by killing off geometric regions of the η–φ plane (candidates landing in "dead" patches get dropped), and plot your model's AUC-vs-severity curve (blue, "Your solution") against a red "(No degradation)" reference curve. See `hackathon_playground.ipynb` for more detail on what to expect.
+`eval.py` here uses **your own** `degradation.py` to simulate severity locally — it's for testing your own approach, not the official scoring run. For judging, we'll degrade the eval set ourselves with a method we're not disclosing in advance (conceptually it kills off geometric η–φ regions, similar to real detector dead zones), so solutions aren't tuned to the exact grading procedure.
