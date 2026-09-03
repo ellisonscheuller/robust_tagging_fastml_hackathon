@@ -18,7 +18,7 @@ from embedding.models import TransformerEncoder, EvalMLP
 from embedding.dataloader import PFCandsDataset, PUPPIDataset
 from embedding.utils.data_utils import load_data, delta_r_from_normalized, set_safe_thread_count
 from embedding.utils.cfg_handler import train_config, data_config
-from embedding.degradation import Degradation
+from embedding.degradation_eval import Degradation  # TEMPORARY: real grading degradation for today's testing, will change before final judging
 
 set_safe_thread_count()
 
