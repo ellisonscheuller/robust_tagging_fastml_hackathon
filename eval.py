@@ -203,8 +203,6 @@ def main(args):
         nominal_latents, nominal_labels_embedded, nominal_zero_frac, args.grace_period
     )
 
-    plot_tsne_by_class(nominal_latents, nominal_labels_embedded, label_name_map, args.outdir)
-
     X_train, X_test, y_train, y_test = train_test_split(
         nominal_latents, nominal_labels_embedded, stratify=nominal_labels_embedded, test_size=0.2, random_state=42
     )
@@ -239,6 +237,8 @@ def main(args):
         with open(args.baseline) as f:
             baseline = json.load(f)
     plot_auc_vs_severity(results_severities, aucs, args.outdir, baseline=baseline)
+
+    plot_tsne_by_class(nominal_latents, nominal_labels_embedded, label_name_map, args.outdir)
 
     if args.diagnostics:
         plot_tsne_zero_fraction(torch.cat(diag_latents), torch.cat(diag_zero_frac), args.outdir)
