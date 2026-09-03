@@ -16,9 +16,11 @@ from sklearn.model_selection import train_test_split
 
 from embedding.models import TransformerEncoder, EvalMLP
 from embedding.dataloader import PFCandsDataset, PUPPIDataset
-from embedding.utils.data_utils import load_data, delta_r_from_normalized
+from embedding.utils.data_utils import load_data, delta_r_from_normalized, set_safe_thread_count
 from embedding.utils.cfg_handler import train_config, data_config
 from embedding.degradation import Degradation
+
+set_safe_thread_count()
 
 def build_preproc_and_encoder(cfg: train_config, checkpoint: dict, device: str):
     preproc_type = cfg.get_trdata_cfg("preproc_type", "PFPreProcessor")

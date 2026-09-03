@@ -1,7 +1,36 @@
+import os
 import torch
 from typing import Union
 
 EPS = 1e-4
+
+def set_safe_thread_count():
+    """Cap torch's CPU thread count to the container's actual CPU quota.
+
+    PyTorch defaults to one thread per visible core, but cgroup-limited
+    environments (shared JupyterHub pods, this dev sandbox, etc.) often expose
+    far more cores than they're actually allotted. Oversubscribing threads
+    there causes severe scheduling contention -- training that should take
+    minutes can end up taking hours.
+    """
+    quota = None
+    try:
+        with open("/sys/fs/cgroup/cpu.max") as f:
+            q, period = f.read().split()
+        if q != "max":
+            quota = max(1, int(q) // int(period))
+    except (FileNotFoundError, ValueError):
+        try:
+            with open("/sys/fs/cgroup/cpu/cpu.cfs_quota_us") as f:
+                q = int(f.read())
+            with open("/sys/fs/cgroup/cpu/cpu.cfs_period_us") as f:
+                period = int(f.read())
+            if q > 0:
+                quota = max(1, q // period)
+        except (FileNotFoundError, ValueError):
+            pass
+
+    torch.set_num_threads(min(quota, os.cpu_count()) if quota else os.cpu_count())
 
 def ensure_finite(name, tensor):
     if not torch.isfinite(tensor).all():

@@ -20,7 +20,7 @@ Special thanks to Roy Cruz Candelaria, Maciej Glowacki, and Mehrnoosh Moallemi f
    ```
 4. Open `hackathon_playground.ipynb` in JupyterLab and run the cells top to bottom.
    - The notebook must be run from the root of your repo copy (where this README lives) — that's the default JupyterLab working directory when you open a notebook there.
-   - Training/eval data is read directly from the shared PVC at `/hackathon-data/C9_robust_tagging/{train,eval}` — you don't need to download or convert anything.
+   - Training/eval data is read directly from the shared PVC at `~/hack-data/C9_robust_tagging/{train,eval}` — you don't need to download or convert anything.
    - Your own checkpoints and plots are written locally into `./checkpoints` and `./eval_plots` inside your repo copy, so they never collide with other participants sharing the same PVC.
 
 ### What you'll edit

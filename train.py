@@ -10,9 +10,10 @@ from embedding.loss import InfoNCELoss
 from embedding.training import make_train_val_split, build_train_val_loaders, train_epoch, validate_epoch, EarlyStopping, cosine_schedule_with_warmup, cosine_constrastive_schedule
 from embedding.utils.data_utils import compute_normalization_constants
 from embedding.utils.cfg_handler import train_config, data_config
-from embedding.utils.data_utils import compute_class_weights, load_data
+from embedding.utils.data_utils import compute_class_weights, load_data, set_safe_thread_count
 from embedding.degradation import Degradation
 
+set_safe_thread_count()
 device = "cuda" if torch.cuda.is_available() else "cpu"
 os.makedirs("checkpoints", exist_ok=True)
 os.makedirs("logs", exist_ok=True)
